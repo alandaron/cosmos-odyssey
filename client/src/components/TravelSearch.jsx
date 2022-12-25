@@ -1,0 +1,171 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
+function TravelSearch({ travelPrices, setSelectedTravel }) {
+	const { t } = useTranslation();
+	const [travelOptions, setTravelOptions] = useState([]);
+	const [fromPlanet, setFromPlanet] = useState("Mercury");
+	const [toPlanet, setToPlanet] = useState("Mercury");
+
+	const planets = [
+		{ name: "Mercury" },
+		{ name: "Venus" },
+		{ name: "Earth" },
+		{ name: "Mars" },
+		{ name: "Jupiter" },
+		{ name: "Saturn" },
+		{ name: "Uranus" },
+		{ name: "Neptune" },
+	];
+
+	function findRoutes(objects, from, to) {
+		// Create a set to store the routes
+		const routes = new Set();
+
+		// Create a helper function to find routes recursively
+		function findRoutesHelper(current, destination, path, visited) {
+			// If the current location is the destination, add the path to the routes set if it is not already present
+			if (current === destination && !routes.has(path)) {
+				routes.add(path);
+			} else {
+				// Loop through each object in the array
+				for (const obj of objects) {
+					// If the object has a "routeInfo" property with a "from" and "to" property,
+					// and the "from" property matches the current location,
+					// and the "to" location has not been visited yet,
+					// recursively call the helper function with the "to" property as the current location,
+					// the path so far, and the updated set of visited locations
+					if (
+						obj.routeInfo.from.name === current &&
+						!visited.has(obj.routeInfo.to.name)
+					) {
+						findRoutesHelper(
+							obj.routeInfo.to.name,
+							destination,
+							[...path, obj.routeInfo.to.name],
+							new Set([...visited, obj.routeInfo.to.name])
+						);
+					}
+				}
+			}
+		}
+
+		// Start the recursive search with the input "from" location as the current location, an empty path, and an empty set of visited locations
+		findRoutesHelper(from, to, [from], new Set([from]));
+
+		// Convert the routes set to an array
+		return [...routes];
+	}
+
+	const searchTravelOptions = () => {
+		const routes = findRoutes([...travelPrices], fromPlanet, toPlanet);
+
+		let travelOptions = [];
+
+		for (let index = 0; index < routes.length; index++) {
+			let routeOptions = [];
+			for (
+				let nameIndex = 0;
+				nameIndex < routes[index].length - 1;
+				nameIndex++
+			) {
+				const fromName = routes[index][nameIndex];
+				const toName = routes[index][nameIndex + 1];
+				const filter = travelPrices.filter(
+					(e) =>
+						e.routeInfo.from.name === fromName && e.routeInfo.to.name === toName
+				);
+				routeOptions.push(filter[0]);
+			}
+			travelOptions.push(routeOptions);
+		}
+
+		setTravelOptions(travelOptions);
+	};
+
+	return (
+		<>
+			<div className="w-full flex gap-1 bg-orange-800 text-white rounded-lg p-3 mb-2">
+				<div className="w-[30%] text-right">Vali lähtekoht:</div>
+				<select
+					className="w-[70%] bg-orange-800"
+					onChange={(e) => setFromPlanet(e.target.value)}
+				>
+					{planets.map((planet, index) => (
+						<option value={planet.name} key={index}>
+							{t(planet.name)}
+						</option>
+					))}
+				</select>
+			</div>
+			<div className="w-full flex gap-1 bg-orange-800 text-white rounded-lg p-3 mb-2">
+				<div className="w-[30%] text-right">Vali sihtkoht:</div>
+				<select
+					className="w-[70%] bg-orange-800"
+					onChange={(e) => setToPlanet(e.target.value)}
+				>
+					{planets.map((planet, index) => (
+						<option value={planet.name} key={index}>
+							{t(planet.name)}
+						</option>
+					))}
+				</select>
+			</div>
+			<div className="text-center">
+				<button
+					className="w-[20%] bg-blue-600 rounded-lg text-white py-1 hover:bg-blue-500"
+					onClick={searchTravelOptions}
+				>
+					Otsi
+				</button>
+			</div>
+			<div className="w-full mt-5">
+				<div>
+					{travelOptions
+						.sort((a, b) => a.length - b.length)
+						.map((options, index) => (
+							<div
+								className="my-3 px-2 bg-stone-800 text-white rounded-lg hover:cursor-pointer hover:bg-stone-700"
+								key={index}
+								onClick={() => setSelectedTravel(options)}
+							>
+								<div>
+									VARIANT {index + 1} ({options.length} hüpet)
+								</div>
+								{options.map((option) => (
+									<div key={option.id}>
+										<div className="text-sm">
+											{t(option.routeInfo.from.name)}
+											<span> - </span>
+											{t(option.routeInfo.to.name)}
+										</div>
+									</div>
+								))}
+							</div>
+						))}
+				</div>
+
+				{/* {travelPrices
+					.filter(
+						(leg) =>
+							leg.routeInfo.from.name === fromPlanet &&
+							leg.routeInfo.to.name === toPlanet
+					)
+					.map((leg) => (
+						<div key={leg.routeInfo.id}>
+							<div>
+								{leg.routeInfo.from.name} - {leg.routeInfo.to.name}
+							</div>
+							{leg.providers.map((provider) => (
+								<div key={provider.id}>
+									{provider.company.name} - {provider.price} €
+								</div>
+							))}
+						</div>
+					))} */}
+			</div>
+		</>
+	);
+}
+
+export default TravelSearch;
