@@ -9,14 +9,14 @@ function Home() {
 	const [selectedTravel, setSelectedTravel] = useState([]);
 
 	useEffect(() => {
-		fetch("http://localhost:3000/api/travelPrices")
+		fetch("https://cosmos-odyssey-psi.vercel.app/api/travelPrices")
 			.then((res) => res.json())
 			.then((json) => setTravelPrices(json.legs));
 	}, []);
 
 	return (
-		<div className="flex gap-12 px-2">
-			<div className="w-[35%]">
+		<div className="flex gap-10 px-2">
+			<div className="w-[35%] mt-5">
 				<TravelSearch
 					travelPrices={travelPrices}
 					setSelectedTravel={setSelectedTravel}
