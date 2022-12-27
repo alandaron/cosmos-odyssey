@@ -8,10 +8,7 @@ const routes = require("./routes/routes");
 
 app.use(
 	cors({
-		origin: [
-			"http://localhost:5173",
-			"https://cosmos-odyssey-react.vercel.app/",
-		],
+		origin: "https://cosmos-odyssey-react.vercel.app/",
 	})
 );
 
