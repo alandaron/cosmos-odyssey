@@ -8,7 +8,7 @@ const routes = require("./routes/routes");
 
 app.use(
 	cors({
-		origin: "https://cosmos-odyssey-react.vercel.app/",
+		origin: "https://cosmos-odyssey-react.vercel.app",
 	})
 );
 
