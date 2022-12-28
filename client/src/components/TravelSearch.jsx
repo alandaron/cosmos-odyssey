@@ -2,7 +2,11 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-function TravelSearch({ travelPrices, setSelectedTravel }) {
+function TravelSearch({
+	travelPrices,
+	setSelectedTravel,
+	setSelectedProviders,
+}) {
 	const { t } = useTranslation();
 	const [travelOptions, setTravelOptions] = useState([]);
 	const [searchType, setSearchType] = useState("direct");
@@ -116,7 +120,6 @@ function TravelSearch({ travelPrices, setSelectedTravel }) {
 
 				travelOptions.push(routeOptions);
 			}
-
 			setTravelOptions(travelOptions);
 		}
 	};
@@ -191,7 +194,10 @@ function TravelSearch({ travelPrices, setSelectedTravel }) {
 							<div
 								className="my-3 px-2 bg-stone-800 text-white rounded-lg hover:cursor-pointer hover:bg-stone-700"
 								key={index}
-								onClick={() => setSelectedTravel(options)}
+								onClick={() => {
+									setSelectedTravel(options);
+									setSelectedProviders([]);
+								}}
 							>
 								<div>
 									VARIANT {index + 1} ({options.length} hüpet)

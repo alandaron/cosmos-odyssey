@@ -4,20 +4,50 @@ const express = require("express");
 const router = express.Router();
 
 //Post Method
-router.post("/post", (req, res) => {
-	res.send("Post API");
+router.post("/reservations", (req, res) => {
+	res.send("Reservations Post API");
 });
 
+const TravelPrice = require("../models/TravelPrice");
+
+let validUntil = 0;
 //Get all Method
 router.get("/travelPrices", async (req, res) => {
-	try {
-		const response = await axios.get(
-			"https://cosmos-odyssey.azurewebsites.net/api/v1.0/TravelPrices"
-		);
+	/**
+	 *
+	 * Peaks kontrollima, kas viimane hinnakiri on aegunud. Kui jah, teha uus päring ning hinnakiri salvestada ajalukku.
+	 * Kui ajaloos on juba 15 hinnakirja salvestatud, eemalda kõige esimene hinnakiri ning see järel kõik reserveeringud, mis
+	 * on seotud selle hinnakirjaga.
+	 *
+	 */
 
-		res.json(response.data);
-	} catch (error) {
-		res.status(500).json({ message: error.message });
+	if (validUntil < new Date().getUTCDate()) {
+		try {
+			const response = await axios.get(
+				"https://cosmos-odyssey.azurewebsites.net/api/v1.0/TravelPrices"
+			);
+
+			const newTravelPrice = new TravelPrice({ ...response.data });
+			const insertedTravelPrice = await newTravelPrice.save();
+			validUntil = insertedTravelPrice.validUntil;
+			TravelPrice.count({}, async (err, count) => {
+				if (count >= 8) {
+					const oldestTravelPrice = await TravelPrice.find()
+						.sort({ createdAt: 1 })
+						.limit(11);
+					await TravelPrice.deleteOne(oldestTravelPrice[0]);
+					/* TODO: Kustutada ka kõik reservatsioonid mis on seotud kõige vanema hinnakirjaga  */
+					res.json(insertedTravelPrice);
+				} else {
+					res.json(insertedTravelPrice);
+				}
+			});
+		} catch (error) {
+			res.status(500).json({ message: error.message });
+		}
+	} else {
+		const travelPrices = await TravelPrice.find().sort({ _id: -1 }).limit(1);
+		res.json(travelPrices[0]);
 	}
 });
 

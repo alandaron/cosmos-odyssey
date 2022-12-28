@@ -7,11 +7,24 @@ function Home() {
 	const { t } = useTranslation();
 	const [travelPrices, setTravelPrices] = useState([]);
 	const [selectedTravel, setSelectedTravel] = useState([]);
+	const [selectedProviders, setSelectedProviders] = useState([]);
+	const [validUntil, setValidUntil] = useState("");
+
+	const dateOptions = {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+	};
 
 	useEffect(() => {
-		fetch("https://cosmos-odyssey-psi.vercel.app/api/travelPrices")
+		fetch("http://localhost:3000/api/travelPrices")
 			.then((res) => res.json())
-			.then((json) => setTravelPrices(json.legs));
+			.then((json) => {
+				setValidUntil(json.validUntil);
+				setTravelPrices(json.legs);
+			});
 	}, []);
 
 	return (
@@ -20,10 +33,22 @@ function Home() {
 				<TravelSearch
 					travelPrices={travelPrices}
 					setSelectedTravel={setSelectedTravel}
+					setSelectedProviders={setSelectedProviders}
 				/>
 			</div>
 			<div className="w-[60%]">
-				<TravelReservation selectedTravel={selectedTravel} />
+				{validUntil !== "" && (
+					<div>
+						Hinnakiri aegub:{" "}
+						{new Date(validUntil).toLocaleString(undefined, dateOptions)}
+					</div>
+				)}
+				<TravelReservation
+					selectedTravel={selectedTravel}
+					setSelectedTravel={setSelectedTravel}
+					selectedProviders={selectedProviders}
+					setSelectedProviders={setSelectedProviders}
+				/>
 			</div>
 		</div>
 	);
