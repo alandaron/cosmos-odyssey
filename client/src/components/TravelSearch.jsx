@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -40,7 +39,6 @@ function TravelSearch({
 				.filter((e) => e.routeInfo.from.name === planet)
 				.map((travel) => travel.routeInfo.to.name);
 
-			console.log(planet);
 			setToPlanets(planetsFromPrices);
 			setToPlanet(planetsFromPrices[0]);
 		}
@@ -94,6 +92,7 @@ function TravelSearch({
 					e.routeInfo.to.name === toPlanet
 			);
 			setTravelOptions([]);
+			setSelectedProviders([]);
 			setSelectedTravel(directRoute);
 		} else if (searchType === "change") {
 			const routes = findRoutes([...travelPrices], fromPlanet, toPlanet);

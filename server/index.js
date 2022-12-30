@@ -11,13 +11,16 @@ const routes = require("./routes/routes");
 
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: [
+			"http://localhost:5173",
+			"https://cosmos-odyssey-react.vercel.app",
+		],
 	})
 );
 
-app.use("/api", routes);
-
 app.use(express.json());
+
+app.use("/api", routes);
 
 const start = async () => {
 	try {
