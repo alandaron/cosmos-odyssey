@@ -1,5 +1,5 @@
 {
     "travelPrices": "https://cosmos-odyssey-psi.vercel.app/api/travelPrices",
     "addReservation": "https://cosmos-odyssey-psi.vercel.app/api/addReservation",
-    "searchReservations": "https://cosmos-odyssey-psi.vercel.app/api/api/searchReservations"
+    "searchReservations": "https://cosmos-odyssey-psi.vercel.app/api/searchReservations"
 }
