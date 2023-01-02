@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -6,8 +8,6 @@ const app = express();
 const cors = require("cors");
 
 const routes = require("./routes/routes");
-
-// user: cosmos, pass: LfqZpAN3JhO5KlA9
 
 app.use(
 	cors({
@@ -24,10 +24,7 @@ app.use("/api", routes);
 
 const start = async () => {
 	try {
-		await mongoose.connect(
-			"mongodb+srv://cosmos:LfqZpAN3JhO5KlA9@cosmos-odyssey.dfn1akq.mongodb.net/?retryWrites=true&w=majority",
-			{ useNewUrlParser: true }
-		);
+		await mongoose.connect(process.env.DB, { useNewUrlParser: true });
 		app.listen(3000, () => {
 			console.log(`Server Started at ${3000}`);
 		});
