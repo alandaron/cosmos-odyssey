@@ -28,8 +28,8 @@ function SearchReservation({ setReservation }) {
 		})
 			.then((res) => res.json())
 			.then((json) => {
-				setSearchResults(json);
 				setLoading(false);
+				setSearchResults(json);
 			});
 	};
 	return (
@@ -68,7 +68,7 @@ function SearchReservation({ setReservation }) {
 			</div>
 			<div className="text-center">
 				<button
-					className="w-[50%] inline-flex justify-center space-x-2 bg-blue-600 rounded-lg mx-1 text-white py-1 hover:bg-blue-500 disabled:pointer-events-none disabled:opacity-75"
+					className="w-[50%] inline-flex items-center justify-center space-x-2 bg-blue-600 rounded-lg mx-1 text-white py-1 hover:bg-blue-500 disabled:pointer-events-none disabled:opacity-75"
 					disabled={loading}
 					onClick={searchReservations}
 				>

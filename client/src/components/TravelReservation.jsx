@@ -136,7 +136,7 @@ function TravelReservation({
 
 	return (
 		<>
-			<div className="font-semibold text-xl text-center">
+			<div className="font-semibold text-xl text-center uppercase">
 				Vali teenusepakkujad
 			</div>
 

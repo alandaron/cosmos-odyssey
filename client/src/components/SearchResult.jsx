@@ -6,6 +6,9 @@ function SearchResult({ reservation }) {
 		<>
 			{reservation !== undefined && (
 				<div>
+					<div className="font-semibold text-xl text-center uppercase">
+						{reservation.firstName} {reservation.lastName} broneering
+					</div>
 					<SelectedProviders
 						viewOnly={true}
 						selectedProviders={reservation.routes}

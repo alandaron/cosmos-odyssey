@@ -52,27 +52,36 @@ function Home() {
 
 	return (
 		<div className="flex gap-10 px-2">
-			<div className="w-[35%] mt-5">
+			<div
+				className={
+					selectedTravel.length > 0
+						? "w-[35%] mt-5 transition-all"
+						: "w-[50%] mt-5 mx-auto"
+				}
+			>
 				<TravelSearch
 					travelPrices={travelPrices}
 					setSelectedTravel={setSelectedTravel}
 					setSelectedProviders={setSelectedProviders}
 				/>
 			</div>
-			<div className="w-[60%]">
-				{validUntil !== "" && (
-					<div className="text-right">
-						Hinnakiri aegub:{" "}
-						{new Date(validUntil).toLocaleString(undefined, dateOptions)}
-					</div>
-				)}
-				<TravelReservation
-					selectedTravel={selectedTravel}
-					setSelectedTravel={setSelectedTravel}
-					selectedProviders={selectedProviders}
-					setSelectedProviders={setSelectedProviders}
-				/>
-			</div>
+
+			{selectedTravel.length > 0 && (
+				<div className="w-[60%]">
+					{validUntil !== "" && (
+						<div className="text-right">
+							Hinnakiri aegub:{" "}
+							{new Date(validUntil).toLocaleString(undefined, dateOptions)}
+						</div>
+					)}
+					<TravelReservation
+						selectedTravel={selectedTravel}
+						setSelectedTravel={setSelectedTravel}
+						selectedProviders={selectedProviders}
+						setSelectedProviders={setSelectedProviders}
+					/>
+				</div>
+			)}
 		</div>
 	);
 }

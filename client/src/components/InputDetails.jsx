@@ -6,7 +6,9 @@ function InputDetails({ loading, saveReservation }) {
 
 	return (
 		<>
-			<div className="font-semibold text-xl text-center mt-6">Sinu andmed</div>
+			<div className="font-semibold text-xl text-center uppercase mt-6">
+				Sinu andmed
+			</div>
 			<div className="flex flex-wrap -mx-3 mt-6">
 				<div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
 					<label

@@ -125,16 +125,40 @@ function TravelSearch({
 
 	return (
 		<>
-			<div className="w-full flex gap-1 bg-orange-800 text-white rounded-lg p-3 mb-2">
-				<div className="w-[30%] text-right">Otsingu tüüp:</div>
-				<select
-					className="w-[70%] bg-orange-800"
-					onChange={(e) => changeSearchType(e.target.value)}
-				>
-					<option value="direct">Otsereisid</option>
-
-					<option value="change">Ümberistumisega reisid</option>
-				</select>
+			<div className="grid w-[100%] grid-cols-2 rounded-xl bg-orange-800 text-white p-2 mb-2">
+				<div className="flex items-center pl-4 w-full ml-[50%]">
+					<input
+						defaultChecked
+						id="direct-radio"
+						type="radio"
+						value="direct"
+						name="bordered-radio"
+						className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+						onClick={(e) => changeSearchType(e.target.value)}
+					/>
+					<label
+						htmlFor="direct-radio"
+						className="py-2 ml-2 w-full text-sm font-medium "
+					>
+						Otsereisid
+					</label>
+				</div>
+				<div className="flex items-center pl-4 w-full mr-[50%]">
+					<input
+						id="change-radio"
+						type="radio"
+						value="change"
+						name="bordered-radio"
+						className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+						onClick={(e) => changeSearchType(e.target.value)}
+					/>
+					<label
+						htmlFor="change-radio"
+						className="py-2 ml-2 w-full text-sm font-medium "
+					>
+						Ümberistumisega reisid
+					</label>
+				</div>
 			</div>
 			<div className="w-full flex gap-1 bg-orange-800 text-white rounded-lg p-3 mb-2">
 				<div className="w-[30%] text-right">Vali lähtekoht:</div>
@@ -170,11 +194,13 @@ function TravelSearch({
 									{t(planet)}
 								</option>
 						  ))
-						: planets.map((planet, index) => (
-								<option value={planet.name} key={index}>
-									{t(planet.name)}
-								</option>
-						  ))}
+						: planets
+								.filter((e) => e.name !== fromPlanet)
+								.map((planet, index) => (
+									<option value={planet.name} key={index}>
+										{t(planet.name)}
+									</option>
+								))}
 				</select>
 			</div>
 			<div className="text-center">
@@ -185,35 +211,40 @@ function TravelSearch({
 					Otsi
 				</button>
 			</div>
-			<div className="w-full mt-5">
-				<div>
-					{travelOptions
-						.sort((a, b) => a.length - b.length)
-						.map((options, index) => (
-							<div
-								className="my-3 px-2 bg-stone-800 text-white rounded-lg hover:cursor-pointer hover:bg-stone-700"
-								key={index}
-								onClick={() => {
-									setSelectedTravel(options);
-									setSelectedProviders([]);
-								}}
-							>
-								<div>
-									VARIANT {index + 1} ({options.length} hüpet)
-								</div>
-								{options.map((option) => (
-									<div key={option.id}>
-										<div className="text-sm">
-											{t(option.routeInfo.from.name)}
-											<span> - </span>
-											{t(option.routeInfo.to.name)}
-										</div>
+			{travelOptions.length > 0 && (
+				<div className="w-full mt-5">
+					<div className="font-semibold text-xl text-center">
+						Otsingu tulemused
+					</div>
+					<div>
+						{travelOptions
+							.sort((a, b) => a.length - b.length)
+							.map((options, index) => (
+								<div
+									className="my-3 px-2 bg-stone-800 text-white rounded-lg hover:cursor-pointer hover:bg-stone-700"
+									key={index}
+									onClick={() => {
+										setSelectedTravel(options);
+										setSelectedProviders([]);
+									}}
+								>
+									<div>
+										VARIANT {index + 1} ({options.length} hüpet)
 									</div>
-								))}
-							</div>
-						))}
+									{options.map((option) => (
+										<div key={option.id}>
+											<div className="text-sm">
+												{t(option.routeInfo.from.name)}
+												<span> - </span>
+												{t(option.routeInfo.to.name)}
+											</div>
+										</div>
+									))}
+								</div>
+							))}
+					</div>
 				</div>
-			</div>
+			)}
 		</>
 	);
 }
